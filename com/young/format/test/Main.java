@@ -2,6 +2,7 @@ package com.young.format.test;
 
 import com.young.format.WavHeaderInfo;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,21 +22,28 @@ public class Main {
             int amount = in.read(wavHeader);
             WavHeaderInfo headerInfo = WavHeaderInfo.parseHeader(wavHeader, 0, amount);
             System.out.println(headerInfo);
-            System.out.println("wav sample rate:" + headerInfo.mFmtChunk.SampleRate);
-            System.out.println("wav bits per sample:" + headerInfo.mFmtChunk.BitsPerSample);
-            System.out.println(headerInfo.getDataSize());
-            System.out.println(headerInfo.getFileSize());
-            System.out.println(headerInfo.getHeaderSize());
+            System.out.println("Sample Rate:" + headerInfo.mFmtChunk.SampleRate);
+            System.out.println("Bits Per Sample:" + headerInfo.mFmtChunk.BitsPerSample);
+            System.out.println("Bit Rate:" + headerInfo.getBitRate());
+            System.out.println("Duration:" + headerInfo.getDuration());
+            System.out.println("Data Size:" + headerInfo.getDataSize());
+            System.out.println("File Size:" + headerInfo.getFileSize());
+            System.out.println("Header Size:" + headerInfo.getHeaderSize());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
+            closeSilently(in);
+        }
+    }
 
-                }
+    private static boolean closeSilently(Closeable c) {
+        if (c != null) {
+            try {
+                c.close();
+            } catch (IOException e) {
+                return false;
             }
         }
+        return true;
     }
 }

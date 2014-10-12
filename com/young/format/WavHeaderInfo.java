@@ -25,20 +25,6 @@ public class WavHeaderInfo {
         mUnknownChunkList = new ArrayList<Unknown_Chunk>();
     }
 
-    public static WavHeaderInfo create(byte[] data) {
-        return create(data, 0, data.length);
-    }
-
-    /**
-     * @param data
-     * @param offset
-     * @param len
-     * @return
-     */
-    public static WavHeaderInfo create(byte[] data, int offset, int len) {
-        return null;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -60,6 +46,22 @@ public class WavHeaderInfo {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * @return Bit Rate of this wav file
+     * unit in bps
+     */
+    public int getBitRate() {
+        return mFmtChunk.ByteRate * 8;
+    }
+
+    /**
+     * @return Duration of this wav file
+     * unit in millisecond
+     */
+    public long getDuration() {
+        return (getDataSize() * 8L * 1000L) / getBitRate();
     }
 
     /**
@@ -97,7 +99,7 @@ public class WavHeaderInfo {
     public static WavHeaderInfo parseHeader(byte[] data, int offset, int len) {
         try {
             WavHeaderInfo instance = new WavHeaderInfo();
-            if (BaseChunk.isChunkIDEuqla(data, offset, RIFF_Chunk.CONST_CHUNK_ID, 0)) {
+            if (BaseChunk.isChunkIDEuqal(data, offset, RIFF_Chunk.CONST_CHUNK_ID, 0)) {
                 instance.mRiffChunk = RIFF_Chunk.create(data, offset, len);
                 offset += 12;
             } else {
@@ -105,11 +107,11 @@ public class WavHeaderInfo {
             }
 
             while (true) {
-                if (BaseChunk.isChunkIDEuqla(data, offset,
+                if (BaseChunk.isChunkIDEuqal(data, offset,
                         FMT_Chunk.CONST_CHUNK_ID, 0)) {
                     instance.mFmtChunk = FMT_Chunk.create(data, offset, len - offset);
                     offset += instance.mFmtChunk.getChunkSize();
-                } else if (BaseChunk.isChunkIDEuqla(
+                } else if (BaseChunk.isChunkIDEuqal(
                         data, offset, DATA_Chunk.CONST_CHUNK_ID, 0)) {
                     instance.mDataChunk = DATA_Chunk.create(data, offset, len - offset);
                     break;
@@ -120,10 +122,10 @@ public class WavHeaderInfo {
                 }
             }
 
-            if (instance.mFmtChunk == null ) {
+            if (instance.mFmtChunk == null) {
                 throw new FormatNotSupportedException("no FMT chunk");
             }
-            if(instance.mDataChunk == null) {
+            if (instance.mDataChunk == null) {
                 throw new FormatNotSupportedException("no Data chunk");
             }
             return instance;
@@ -156,10 +158,9 @@ public class WavHeaderInfo {
 
         public BaseChunk doCreate(byte[] data, int offset, int len) {
             if (offset < 0 || data.length < offset + len) {
-                throw new IllegalArgumentException("arrary length:" + data.length +
+                throw new IllegalArgumentException("array length:" + data.length +
                         " offset:" + offset + " len:" + len);
             }
-            BaseChunk chunk = new BaseChunk();
             System.arraycopy(data, offset, ChunkID, 0, ChunkID.length);
             offset += 4;
             ChunkSize = Memory.peekInt(data, offset, ByteOrder.LITTLE_ENDIAN);
@@ -173,7 +174,7 @@ public class WavHeaderInfo {
             return 8 + ChunkSize;
         }
 
-        public static boolean isChunkIDEuqla(byte[] one, int oneOffset,
+        public static boolean isChunkIDEuqal(byte[] one, int oneOffset,
                                              byte[] another, int anotherOffset) {
             if (one != null && another != null
                     && one.length >= 4 + oneOffset
