@@ -17,10 +17,12 @@ public class Main {
         byte[] wavHeader = new byte[1024];
         FileInputStream in = null;
         try {
-            in = new FileInputStream(new File("path-to-a-wav-file"));
+            in = new FileInputStream(new File("sample.wav"));
             int amount = in.read(wavHeader);
             WavHeaderInfo headerInfo = WavHeaderInfo.parseHeader(wavHeader, 0, amount);
             System.out.println(headerInfo);
+            System.out.println("wav sample rate:" + headerInfo.mFmtChunk.SampleRate);
+            System.out.println("wav bits per sample:" + headerInfo.mFmtChunk.BitsPerSample);
             System.out.println(headerInfo.getDataSize());
             System.out.println(headerInfo.getFileSize());
             System.out.println(headerInfo.getHeaderSize());

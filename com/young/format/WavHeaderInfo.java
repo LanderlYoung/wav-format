@@ -101,7 +101,7 @@ public class WavHeaderInfo {
                 instance.mRiffChunk = RIFF_Chunk.create(data, offset, len);
                 offset += 12;
             } else {
-                throw new FormatNotSupportException("no RIFF chunk");
+                throw new FormatNotSupportedException("no RIFF chunk");
             }
 
             while (true) {
@@ -121,15 +121,15 @@ public class WavHeaderInfo {
             }
 
             if (instance.mFmtChunk == null ) {
-                throw new FormatNotSupportException("no FMT chunk");
+                throw new FormatNotSupportedException("no FMT chunk");
             }
             if(instance.mDataChunk == null) {
-                throw new FormatNotSupportException("no Data chunk");
+                throw new FormatNotSupportedException("no Data chunk");
             }
             return instance;
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
-        } catch (FormatNotSupportException fe) {
+        } catch (FormatNotSupportedException fe) {
             return null;
         }
     }

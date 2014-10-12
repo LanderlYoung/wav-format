@@ -6,12 +6,12 @@ package com.young.format;
  * Time:   下午8:23
  * Life with passion. Code with creativity!
  */
-public class FormatNotSupportException extends Exception {
-    public FormatNotSupportException() {
+public class FormatNotSupportedException extends Exception {
+    public FormatNotSupportedException() {
         this(null);
     }
 
-    public FormatNotSupportException(String info) {
+    public FormatNotSupportedException(String info) {
         super(info);
     }
 }
