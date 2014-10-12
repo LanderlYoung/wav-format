@@ -32,7 +32,7 @@ Wanna get more information from `WavHeaderInfo` ?
 Why not dive into [source file][1] and get the source coude as well as javadoc! 
 For information about wav header format,  please refer to [here][2].
 
-Bug reporting an suggestions is welcome.
+Bug reporting and suggestions are welcome.
 
 [1]:com/young/format/WavHeaderInfo.java
 [2]:https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
